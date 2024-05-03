@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -17,11 +21,27 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
-  @Override
-  public void robotInit() {}
+  private Servo pointer;
+
+  private TalonSRX turret;
+  DeadEyeSubsystem deadeye;
 
   @Override
-  public void robotPeriodic() {}
+  public void robotInit() {
+    pointer = new Servo(Constants.kServoID);
+    turret = new TalonSRX(Constants.kFalconSRXID);
+    deadeye = new DeadEyeSubsystem();
+
+    turret.configFactoryDefault();
+    turret.configAllSettings(Constants.getSrxConfiguration());
+    turret.setSelectedSensorPosition(0.0);
+  }
+
+  @Override
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+    System.out.println(deadeye.getDistanceToCamCenter());
+  }
 
   @Override
   public void autonomousInit() {}
@@ -32,8 +52,24 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {}
 
+  public double clamp(double min, double max, double n) {
+    assert max > min;
+    if (n > max) {
+      return max;
+    }
+    if (n < min) {
+      return min;
+    }
+    return n;
+  }
+
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    double center = deadeye.getDistanceToCamCenter();
+    double output = clamp(-0.9, 0.9, (center * Constants.kTurretP));
+    
+    turret.set(TalonSRXControlMode.PercentOutput, output);
+  }
 
   @Override
   public void disabledInit() {}

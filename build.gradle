@@ -1,5 +1,6 @@
 plugins {
     id "java"
+    id "com.diffplug.spotless" version "6.12.1"
     id "edu.wpi.first.GradleRIO" version "2024.3.2"
 }
 
@@ -99,3 +100,12 @@ wpi.java.configureTestTasks(test)
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
+
+spotless {
+    java {
+        googleJavaFormat()
+        removeUnusedImports()
+        lineEndings = 'GIT_ATTRIBUTES'
+        targetExclude("src/main/java/frc/robot/constants/BuildConstants.java")
+    }
+}  
