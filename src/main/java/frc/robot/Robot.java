@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    System.out.println(deadeye.getDistanceToCamCenter());
+    // System.out.println(deadeye.getDistanceToCamCenter());
   }
 
   @Override
@@ -67,8 +67,17 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     double center = deadeye.getDistanceToCamCenter();
     double output = clamp(-0.9, 0.9, (center * Constants.kTurretP));
-    
+
+    double[] t = deadeye.getTranslationFromCamCenter();
+
+    double depth = t[1];
+    double height = t[2];
+
+    double servoOut = clamp(0.01, 0.99, -(Math.atan2(height, depth) / Math.PI + 0.6)); // ADD SOMETHING
+    System.out.println(Math.atan2(height, depth) / Math.PI);
+
     turret.set(TalonSRXControlMode.PercentOutput, output);
+    pointer.set(servoOut);
   }
 
   @Override
