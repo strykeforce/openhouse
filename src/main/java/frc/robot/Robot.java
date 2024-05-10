@@ -24,13 +24,17 @@ public class Robot extends TimedRobot {
   private Servo pointer;
 
   private TalonSRX turret;
-  DeadEyeSubsystem deadeye;
+  private DeadEyeSubsystem deadeye;
+  private LedSubsystem ledSubsystem;
 
   @Override
   public void robotInit() {
     pointer = new Servo(Constants.kServoID);
     turret = new TalonSRX(Constants.kFalconSRXID);
     deadeye = new DeadEyeSubsystem();
+    ledSubsystem = new LedSubsystem();
+
+    ledSubsystem.test();
 
     turret.configFactoryDefault();
     turret.configAllSettings(Constants.getSrxConfiguration());
@@ -65,19 +69,21 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+
     double center = deadeye.getDistanceToCamCenter();
-    double output = clamp(-0.9, 0.9, (center * Constants.kTurretP));
+    double output = clamp(-0.9, 0.9, (center * Constants.kTurretP)) * Constants.kMaxVel;
 
     double[] t = deadeye.getTranslationFromCamCenter();
 
-    double depth = t[1];
-    double height = t[2];
+    double height = t[1];
+    double depth = t[2];
 
-    double servoOut = clamp(0.01, 0.99, -(Math.atan2(height, depth) / Math.PI + 0.6)); // ADD SOMETHING
-    System.out.println(Math.atan2(height, depth) / Math.PI);
+    double servoOut = clamp(0.01, 0.99, Math.atan2(height, depth) / Math.PI + 5.0 / 180.0 + 0.6);
 
-    turret.set(TalonSRXControlMode.PercentOutput, output);
-    pointer.set(servoOut);
+    turret.set(TalonSRXControlMode.Velocity, output);
+    if (depth > 0) {
+      pointer.set(servoOut);
+    }
   }
 
   @Override

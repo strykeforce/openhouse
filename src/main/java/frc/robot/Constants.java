@@ -7,6 +7,8 @@ import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
 public class Constants {
   public static final int kServoID = 0;
   public static final int kFalconSRXID = 6;
+  public static final int kLedPort = 1;
+  public static final int kLedLen = 41;
 
   public static final double kMaxVel = 290.0;
 

@@ -67,14 +67,24 @@ public class DeadEyeSubsystem extends MeasurableSubsystem {
     }
 
     validTargs.sort(
-        Comparator.comparingInt(r -> ((Rect) r).size()).thenComparingInt(r -> ((Rect) r).size()));
+        Comparator.comparingInt(r -> -((Rect) r).size()).thenComparingInt(r -> -((Rect) r).size()));
 
     if (validTargs.size() > 0) {
-      double[] a = {validTargs.get(0).topLeft.x, validTargs.get(0).topLeft.y};
-      double[] b = {validTargs.get(0).bottomRight.x, validTargs.get(0).bottomRight.y};
+      Rect r = validTargs.get(0);
 
-      double[] t = get3D(a, b);
-      return t;
+      if (r.width() > r.height()) {
+        double[] a = {r.topLeft.x, (r.topLeft.y + r.bottomRight.y) / 2};
+        double[] b = {r.bottomRight.x, (r.topLeft.y + r.bottomRight.y) / 2};
+
+        double[] t = get3D(a, b);
+        return t;
+      } else {
+        double[] a = {(r.topLeft.x + r.bottomRight.x) / 2, r.topLeft.y};
+        double[] b = {(r.topLeft.x + r.bottomRight.x) / 2, r.bottomRight.y};
+
+        double[] t = get3D(a, b);
+        return t;
+      }
     }
     return ret;
   }
@@ -120,10 +130,13 @@ public class DeadEyeSubsystem extends MeasurableSubsystem {
 
   // NOT PART OF DEADEYE - OPEN HOUSE DEMO ONLY
   public double[] get3D(double[] apogee1, double[] apogee2) {
+    // System.out.print((apogee1[0] + apogee2[0]) / 2);
+    // System.out.print("\t");
+    // System.out.println((apogee1[1] + apogee2[1]) / 2);
 
     double[][] eye = {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}};
     double[][] K = {
-      {1112.87614936, 0.0, 631.27084086}, {0.0, 1110.504635, 404.26599437}, {0.0, 0.0, 1.0}
+      {674.5626, 0.0, 309.59148}, {0.0, 673.2300328, 242.1173651157}, {0.0, 0.0, 1.0}
     };
 
     SimpleMatrix r = new SimpleMatrix(eye);
@@ -143,12 +156,11 @@ public class DeadEyeSubsystem extends MeasurableSubsystem {
         inverseRotAndK.mult(point2DHomogeneous.extractVector(false, 1));
 
     double scaleFactor = 35.56 / point3dDirection1.minus(point3dDirection2).normF();
-    SimpleMatrix endpoints = point3dDirection1.combine(0, 1, point3dDirection2).scale(scaleFactor);
 
     double[] result = new double[3];
-    result[0] = (endpoints.get(0) + endpoints.get(3)) / 2;
-    result[1] = (endpoints.get(1) + endpoints.get(4)) / 2;
-    result[2] = (endpoints.get(2) + endpoints.get(5)) / 2;
+    result[0] = (point3dDirection1.get(0) + point3dDirection2.get(0)) / 2 * scaleFactor;
+    result[1] = -(point3dDirection1.get(1) + point3dDirection2.get(1)) / 2 * scaleFactor;
+    result[2] = (point3dDirection1.get(2) + point3dDirection2.get(2)) / 2 * scaleFactor;
 
     return result;
   }
