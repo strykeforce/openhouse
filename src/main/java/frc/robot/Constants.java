@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
+import edu.wpi.first.wpilibj.util.Color;
 
 public class Constants {
   public static final int kServoID = 0;
@@ -47,4 +48,26 @@ public class Constants {
 
     return config;
   }
+
+  public static final int kRightLedPort = 1;
+  public static final int kRightLedLength = 41;
+
+  public static final int kLoopCounterCandy = 5;
+
+  // public static final Color[] candy = {
+  //   new Color(246, 68, 252),
+  //   new Color(129, 250, 127),
+  //   new Color(255, 253, 94),
+  //   new Color(255, 117, 117),
+  //   new Color(110, 108, 255)
+  // };
+
+  public static final Color[] candy = {
+    new Color(255, 50, 50),
+    new Color(255, 127, 50),
+    new Color(255, 255, 50),
+    new Color(50, 255, 50),
+    new Color(50, 50, 255),
+    new Color(255, 50, 255)
+  };
 }

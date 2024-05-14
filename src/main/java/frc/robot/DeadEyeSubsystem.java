@@ -101,6 +101,10 @@ public class DeadEyeSubsystem extends MeasurableSubsystem {
     return data.targets.size();
   }
 
+  public boolean seesTarget() {
+    return getNumTargets() > 0;
+  }
+
   // public boolean isNoteRight() {
   // List<Rect> list = data.targets;
 

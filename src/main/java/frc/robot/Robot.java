@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.LedSubsystem.LedState;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,6 +28,8 @@ public class Robot extends TimedRobot {
   private DeadEyeSubsystem deadeye;
   private LedSubsystem ledSubsystem;
 
+  private Boolean isOnColor = false;
+
   @Override
   public void robotInit() {
     pointer = new Servo(Constants.kServoID);
@@ -34,11 +37,10 @@ public class Robot extends TimedRobot {
     deadeye = new DeadEyeSubsystem();
     ledSubsystem = new LedSubsystem();
 
-    ledSubsystem.test();
-
     turret.configFactoryDefault();
     turret.configAllSettings(Constants.getSrxConfiguration());
     turret.setSelectedSensorPosition(0.0);
+    ledSubsystem.setFlaming();
   }
 
   @Override
@@ -83,6 +85,11 @@ public class Robot extends TimedRobot {
     turret.set(TalonSRXControlMode.Velocity, output);
     if (depth > 0) {
       pointer.set(servoOut);
+    }
+    if (deadeye.seesTarget()) {
+      if (ledSubsystem.getState() != LedState.CANDY) ledSubsystem.setCandy();
+    } else {
+      if (ledSubsystem.getState() != LedState.FLAMING) ledSubsystem.setFlaming();
     }
   }
 
