@@ -27,6 +27,7 @@ public class Robot extends TimedRobot {
   private TalonSRX turret;
   private DeadEyeSubsystem deadeye;
   private LedSubsystem ledSubsystem;
+  private wallEYESubsystem wallEYE;
 
   private Boolean isOnColor = false;
 
@@ -36,6 +37,7 @@ public class Robot extends TimedRobot {
     turret = new TalonSRX(Constants.kFalconSRXID);
     deadeye = new DeadEyeSubsystem();
     ledSubsystem = new LedSubsystem();
+    wallEYE = new wallEYESubsystem();
 
     turret.configFactoryDefault();
     turret.configAllSettings(Constants.getSrxConfiguration());
@@ -97,7 +99,10 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    System.out.println(wallEYE.numTargets());
+    System.out.println(5);
+  }
 
   @Override
   public void testInit() {}
