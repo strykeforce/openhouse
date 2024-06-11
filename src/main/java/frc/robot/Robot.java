@@ -100,8 +100,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    System.out.println(wallEYE.numTargets());
-    System.out.println(5);
+    System.out.println(wallEYE.updateNumber());
   }
 
   @Override

@@ -9,7 +9,7 @@ public class wallEYESubsystem extends MeasurableSubsystem {
   WallEyeCam cam;
 
   public wallEYESubsystem() {
-    cam = new WallEyeCam("shooter", 0, -1);
+    cam = new WallEyeCam("Walleye", 0, 5802, -1);
   }
 
   @Override
@@ -17,8 +17,8 @@ public class wallEYESubsystem extends MeasurableSubsystem {
     cam.getResults();
   }
 
-  public String numTargets() {
-    return cam.getUDPnumTargets();
+  public int updateNumber() {
+    return cam.getResults().getUpdateNum();
   }
 
   @Override
