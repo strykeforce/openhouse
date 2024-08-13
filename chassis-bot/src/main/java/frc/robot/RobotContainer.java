@@ -15,15 +15,18 @@ import frc.robot.commands.DriveTeleCommand;
 import frc.robot.commands.ResetGyroCommand;
 import frc.robot.controls.Interlink;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class RobotContainer {
 
   private final DriveSubsystem driveSubsystem;
+  private final IntakeSubsystem intakeSubsystem;
   private final Joystick driveJoystick;
   private final Interlink interlink;
 
   public RobotContainer() {
     driveSubsystem = new DriveSubsystem();
+    intakeSubsystem = new IntakeSubsystem();
     driveJoystick = new Joystick(0);
     interlink = new Interlink(driveJoystick);
     configureBindings();
@@ -39,6 +42,8 @@ public class RobotContainer {
     new JoystickButton(driveJoystick, Interlink.InterlinkButton.RESET.id)
         .onTrue(new ResetGyroCommand(driveSubsystem));
 
+    new JoystickButton(driveJoystick, Interlink.InterlinkButton.RESET.id).onTrue(driveSubsystem.setAzimuthVelociCommand(0.2, intakeSubsystem));
+
     new Trigger(
             () ->
                 (driveJoystick.getRawButtonPressed(Interlink.InterlinkButton.HAMBURGER.id)
@@ -46,6 +51,10 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> driveSubsystem.toggleSlow(), driveSubsystem));
 
     Shuffleboard.getTab("Test").addBoolean("isSlow", () -> driveSubsystem.isSlow());
+
+    new JoystickButton(driveJoystick, Interlink.Shoulder.RIGHT_DOWN.id)
+        .onTrue(new InstantCommand(() -> intakeSubsystem.toggleIntaking(), intakeSubsystem))
+        .onFalse(new InstantCommand(() -> intakeSubsystem.toggleIntaking(), intakeSubsystem));
   }
 
   public Command getAutonomousCommand() {

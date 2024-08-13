@@ -9,8 +9,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+import java.util.function.DoubleSupplier;
+
 import org.strykeforce.gyro.SF_AHRS;
 import org.strykeforce.swerve.PoseEstimatorOdometryStrategy;
 import org.strykeforce.swerve.SwerveDrive;
@@ -106,5 +114,21 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getYawScale() {
     return yawScale;
+  }
+
+  private void setAzimuthVels(double speed) {
+    //test
+  }
+
+  public Command resetGyroCommand() {
+    return new InstantCommand(() -> resetGyro(), this);
+  }
+
+  public Command setGyroOffsetCommand(DoubleSupplier offsetDegrees) {
+    return new InstantCommand(() -> swerveDrive.setGyroOffset(Rotation2d.fromDegrees(offsetDegrees.getAsDouble())), this);
+  }
+
+  public Command setAzimuthVelociCommand(Double speed, IntakeSubsystem intakeSubsystem) {
+    return new StartEndCommand(() -> setAzimuthVels(speed), () -> setAzimuthVels(0.0), this, intakeSubsystem).withTimeout(1.0);
   }
 }
