@@ -42,7 +42,8 @@ public class RobotContainer {
     new JoystickButton(driveJoystick, Interlink.InterlinkButton.RESET.id)
         .onTrue(new ResetGyroCommand(driveSubsystem));
 
-    new JoystickButton(driveJoystick, Interlink.InterlinkButton.RESET.id).onTrue(driveSubsystem.setAzimuthVelociCommand(0.2, intakeSubsystem));
+    new JoystickButton(driveJoystick, Interlink.InterlinkButton.RESET.id)
+        .onTrue(driveSubsystem.setAzimuthVelociCommand(0.2, intakeSubsystem));
 
     new Trigger(
             () ->
