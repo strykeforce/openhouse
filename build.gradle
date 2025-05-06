@@ -1,7 +1,7 @@
 plugins {
     id "java"
     id "com.diffplug.spotless" version "6.12.1"
-    id "edu.wpi.first.GradleRIO" version "2024.3.2"
+    id "edu.wpi.first.GradleRIO" version "2025.2.1"
 }
 
 java {
@@ -34,6 +34,7 @@ deploy {
                 frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
                     files = project.fileTree('src/main/deploy')
                     directory = '/home/lvuser/deploy'
+                    deleteOldFiles = false
                 }
             }
         }

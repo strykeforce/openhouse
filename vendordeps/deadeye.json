@@ -3,7 +3,7 @@
     "name": "StrykeForce-Deadeye",
     "version": "24.1.0",
     "uuid": "a8620993-3ffc-425e-95d9-a5e73eabef40",
-    "frcYear": "2024",
+    "frcYear": "2025",
     "mavenUrls": ["https://d1cfub2bqs98lp.cloudfront.net/repo"],
     "jsonUrl": "http://maven.strykeforce.org/deadeye.json",
     "javaDependencies": [
