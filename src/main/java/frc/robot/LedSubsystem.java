@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import java.util.Set;
 import org.strykeforce.telemetry.measurable.MeasurableSubsystem;
@@ -16,6 +17,10 @@ public class LedSubsystem extends MeasurableSubsystem {
   private AddressableLEDBuffer ledBufferR = new AddressableLEDBuffer(Constants.kRightLedLength);
   private int candyIterator = 0;
   private int loopCounter = 0;
+  private LEDPattern alexa =
+      LEDPattern.gradient(LEDPattern.GradientType.kContinuous, Color.kRed, Color.kBlue);
+  private double alexaTicks = 0.0;
+  private double depth = 0.0;
 
   //   private AddressableLED ledL = new AddressableLED(Constants.kLeftLedPort);
   //   private AddressableLEDBuffer ledBufferL;
@@ -83,9 +88,18 @@ public class LedSubsystem extends MeasurableSubsystem {
     candyIterator = 0;
   }
 
+  public void setAlexa() {
+    setState(LedState.ALEXA);
+  }
+
   public void setOff() {
     setColor(new Color());
     currState = LedState.OFF;
+  }
+
+  public void setAlexaStuff(double PosTicks, double depth) {
+    alexaTicks = PosTicks;
+    this.depth = depth;
   }
 
   @Override
@@ -124,6 +138,21 @@ public class LedSubsystem extends MeasurableSubsystem {
           loopCounter++;
         }
         break;
+      case ALEXA:
+        Color color = Color.fromHSV((int) (depth * 1.0), 99, 99);
+        LEDPattern alexa =
+            LEDPattern.gradient(
+                LEDPattern.GradientType.kContinuous,
+                // color,
+                // color,
+                Color.kDarkGray,
+                Color.kDarkGray,
+                Color.kGreen,
+                Color.kGreen);
+        alexa = alexa.offsetBy((int) (Math.floor(alexaTicks * Constants.kTickToLED)) - 5);
+        alexa.applyTo(ledBufferR);
+        ledR.setData(ledBufferR);
+        break;
       case OFF:
         break;
       default:
@@ -141,6 +170,7 @@ public class LedSubsystem extends MeasurableSubsystem {
     OFF,
     SOLID,
     FLAMING,
-    CANDY
+    CANDY,
+    ALEXA
   }
 }

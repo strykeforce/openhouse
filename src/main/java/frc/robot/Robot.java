@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
     turret.configFactoryDefault();
     turret.configAllSettings(Constants.getSrxConfiguration());
     turret.setSelectedSensorPosition(0.0);
-    ledSubsystem.setFlaming();
+    ledSubsystem.setCandy();
   }
 
   @Override
@@ -69,11 +69,15 @@ public class Robot extends TimedRobot {
     return n;
   }
 
+  public void updateAlexa(double depth) {
+    ledSubsystem.setAlexaStuff(turret.getSelectedSensorPosition(), depth);
+  }
+
   @Override
   public void teleopPeriodic() {
 
     double center = deadeye.getDistanceToCamCenter();
-    double output = clamp(-0.9, 0.9, (center * Constants.kTurretP)) * Constants.kMaxVel;
+    double output = clamp(-1.0, 1.0, (center * Constants.kTurretP)) * Constants.kMaxVel;
 
     double[] t = deadeye.getTranslationFromCamCenter();
 
@@ -87,9 +91,13 @@ public class Robot extends TimedRobot {
       pointer.set(servoOut);
     }
     if (deadeye.seesTarget()) {
-      if (ledSubsystem.getState() != LedState.CANDY) ledSubsystem.setCandy();
+      if (ledSubsystem.getState() != LedState.ALEXA) {
+        ledSubsystem.setAlexa();
+        updateAlexa(depth);
+      }
+      updateAlexa(depth);
     } else {
-      if (ledSubsystem.getState() != LedState.FLAMING) ledSubsystem.setFlaming();
+      if (ledSubsystem.getState() != LedState.CANDY) ledSubsystem.setCandy();
     }
   }
 

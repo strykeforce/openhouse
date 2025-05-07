@@ -10,6 +10,7 @@ public class Constants {
   public static final int kFalconSRXID = 6;
   public static final int kLedPort = 1;
   public static final int kLedLen = 41;
+  public static final double kTickToLED = 0.00931818;
 
   public static final double kMaxVel = 290.0;
 
