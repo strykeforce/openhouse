@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.LedSubsystem.LedState;
+import org.strykeforce.telemetry.TelemetryController;
+import org.strykeforce.telemetry.TelemetryService;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -30,12 +32,18 @@ public class Robot extends TimedRobot {
 
   private Boolean isOnColor = false;
 
+  private double minDepth = 1000.0;
+  private double maxDepth = 0.0;
+  private TelemetryService telemetryService = new TelemetryService(TelemetryController::new);
+
   @Override
   public void robotInit() {
     pointer = new Servo(Constants.kServoID);
     turret = new TalonSRX(Constants.kFalconSRXID);
     deadeye = new DeadEyeSubsystem();
     ledSubsystem = new LedSubsystem();
+    ledSubsystem.registerWith(telemetryService);
+    telemetryService.start();
 
     turret.configFactoryDefault();
     turret.configAllSettings(Constants.getSrxConfiguration());
@@ -89,6 +97,14 @@ public class Robot extends TimedRobot {
     turret.set(TalonSRXControlMode.Velocity, output);
     if (depth > 0) {
       pointer.set(servoOut);
+      if (depth < minDepth) {
+        minDepth = depth;
+        System.out.println("minDepth: " + minDepth);
+      }
+      if (depth > maxDepth) {
+        maxDepth = depth;
+        System.out.println("maxDepth: " + maxDepth);
+      }
     }
     if (deadeye.seesTarget()) {
       if (ledSubsystem.getState() != LedState.ALEXA) {

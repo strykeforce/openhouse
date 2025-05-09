@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
@@ -21,6 +22,7 @@ public class LedSubsystem extends MeasurableSubsystem {
       LEDPattern.gradient(LEDPattern.GradientType.kContinuous, Color.kRed, Color.kBlue);
   private double alexaTicks = 0.0;
   private double depth = 0.0;
+  private Color alexaColor = new Color();
 
   //   private AddressableLED ledL = new AddressableLED(Constants.kLeftLedPort);
   //   private AddressableLEDBuffer ledBufferL;
@@ -139,16 +141,18 @@ public class LedSubsystem extends MeasurableSubsystem {
         }
         break;
       case ALEXA:
-        Color color = Color.fromHSV((int) (depth * 1.0), 99, 99);
+        alexaColor =
+            new Color(
+                0,
+                MathUtil.clamp((depth - 60) / 140, 0, 1) * -1 + 1,
+                MathUtil.clamp((depth - 60) / 140, 0, 1));
         LEDPattern alexa =
             LEDPattern.gradient(
                 LEDPattern.GradientType.kContinuous,
-                // color,
-                // color,
                 Color.kDarkGray,
                 Color.kDarkGray,
-                Color.kGreen,
-                Color.kGreen);
+                alexaColor,
+                alexaColor);
         alexa = alexa.offsetBy((int) (Math.floor(alexaTicks * Constants.kTickToLED)) - 5);
         alexa.applyTo(ledBufferR);
         ledR.setData(ledBufferR);
@@ -163,7 +167,8 @@ public class LedSubsystem extends MeasurableSubsystem {
 
   @Override
   public Set<Measure> getMeasures() {
-    return Set.of(new Measure("State", () -> getState().ordinal()));
+    return Set.of(
+        new Measure("depth", () -> depth), new Measure("alexaColor blue", () -> alexaColor.blue));
   }
 
   public enum LedState {
