@@ -141,11 +141,13 @@ public class LedSubsystem extends MeasurableSubsystem {
         }
         break;
       case ALEXA:
+        // alexaColor =
+        //     new Color(
+        //         0,
+        //         MathUtil.clamp((depth - 60) / 140, 0, 1) * -1 + 1,
+        //         MathUtil.clamp((depth - 60) / 140, 0, 1));
         alexaColor =
-            new Color(
-                0,
-                MathUtil.clamp((depth - 60) / 140, 0, 1) * -1 + 1,
-                MathUtil.clamp((depth - 60) / 140, 0, 1));
+            Color.fromHSV((int) (MathUtil.clamp((depth - 60) / 140 * 180, 0, 180)), 255, 255);
         LEDPattern alexa =
             LEDPattern.gradient(
                 LEDPattern.GradientType.kContinuous,
