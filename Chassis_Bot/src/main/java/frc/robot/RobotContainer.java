@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.drive.DriveSubsystem;
 import frc.robot.drive.Swerve;
+import frc.robot.drive.SwerveFXS;
 import frc.robot.Interlink;
 import frc.robot.ResetGyroCommand;
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,17 +18,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   private final DriveSubsystem driveSubsystem;
   private final Interlink interlink;
-  private final Swerve swerve;
+  private final SwerveFXS swerve;
   private final Joystick joystick;
   public RobotContainer() {
-    swerve = new Swerve();
+    swerve = new SwerveFXS();
     driveSubsystem = new DriveSubsystem(swerve);
     joystick = new Joystick(0);
     interlink = new Interlink(joystick);
     configureBindings();
   }
 
-  private void configureBindings() {driveSubsystem.setDefaultCommand(
+  public void disableGyroNoMotionCal(){
+    swerve.disableNoMotionCal();
+  }
+
+  private void configureBindings() {
+    driveSubsystem.setDefaultCommand(
     new DriveTeleopCommand(
         () -> interlink.getFwd(),
         () -> interlink.getStr(),
@@ -37,8 +43,8 @@ public class RobotContainer {
         .onTrue(new ResetGyroCommand(driveSubsystem));
         new Trigger(
           () ->
-                (joystick.getRawButtonPressed(Interlink.Trim.LEFT_X_NEG.id)
-                    && joystick.getRawButtonPressed(Interlink.Trim.RIGHT_X_POS.id)
+                (joystick.getRawButtonPressed(Interlink.Trim.LEFT_Y_NEG.id)
+                    && joystick.getRawButtonPressed(Interlink.Trim.RIGHT_Y_POS.id)
                     && joystick.getRawButtonPressed(Interlink.InterlinkButton.UP.id)))
                     .onTrue(new boringDriving(driveSubsystem));
         }

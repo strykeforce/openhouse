@@ -216,9 +216,9 @@ public class DriveConstants {
     config.MountPose.MountPoseRoll = 0.0;
     config.MountPose.MountPosePitch = 0.0;
 
-    config.GyroTrim.GyroScalarX = -1.2;
-    config.GyroTrim.GyroScalarY = 4.8;
-    config.GyroTrim.GyroScalarZ = -2.9;
+    config.GyroTrim.GyroScalarX = 0.0;
+    config.GyroTrim.GyroScalarY = 0.0;
+    config.GyroTrim.GyroScalarZ = -4.55;
 
     return config;
   }

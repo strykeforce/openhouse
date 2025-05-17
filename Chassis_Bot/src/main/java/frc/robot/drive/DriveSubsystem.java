@@ -31,7 +31,7 @@ public class DriveSubsystem extends MeasurableSubsystem {
   private ChassisSpeeds holoContOutput = new ChassisSpeeds();
   private double trajectoryActive = 0.0;
 
-  private double driveMultiplier = 1.0;
+  private double driveMultiplier = 0.2;
 
   private int gyroDifferentCount = 0;
   private int gyroCorrectionCount = 0;
@@ -54,9 +54,9 @@ public class DriveSubsystem extends MeasurableSubsystem {
 
   // Open-Loop Swerve Movements
   public void drive(double vXmps, double vYmps, double vOmegaRadps) {
-    if (!ignoreSticks) {
+    // if (!ignoreSticks) {
       io.drive(vXmps * driveMultiplier, vYmps * driveMultiplier, vOmegaRadps, true);
-    }
+    // }
   }
 
   public void toggleSafeDriving(){
@@ -212,6 +212,13 @@ public class DriveSubsystem extends MeasurableSubsystem {
         "DriveSubsystem/Gyro Disagreement",
         inputs.gyroRotation2d.minus(inputs.navxRotation2d).getDegrees());
 
+        org.littletonrobotics.junction.Logger.recordOutput(
+          "DriveSubsystem/Drive Multipler",
+          driveMultiplier);
+          org.littletonrobotics.junction.Logger.recordOutput(
+          "DriveSubsystem/Boring Driving",
+          boringDriving);
+    /* 
     if (Math.abs(inputs.gyroRotation2d.minus(inputs.navxRotation2d).getDegrees())
         > DriveConstants.kGyroDifferentThreshold) {
       gyroDifferentCount++;
@@ -224,6 +231,7 @@ public class DriveSubsystem extends MeasurableSubsystem {
       gyroDifferentCount = 0;
       gyroCorrectionCount++;
     }
+      */
 
     switch (currDriveState) {
       case IDLE -> {}
