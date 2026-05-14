@@ -31,7 +31,7 @@ public class DriveSubsystem extends MeasurableSubsystem {
   private ChassisSpeeds holoContOutput = new ChassisSpeeds();
   private double trajectoryActive = 0.0;
 
-  private double driveMultiplier = 0.2;
+  private double driveMultiplier = DriveConstants.kSlowDriveMultiplier;
 
   private int gyroDifferentCount = 0;
   private int gyroCorrectionCount = 0;
@@ -64,7 +64,7 @@ public class DriveSubsystem extends MeasurableSubsystem {
         driveMultiplier = 1.0;
         boringDriving = false;
     }else{
-        driveMultiplier = 0.2;
+        driveMultiplier = DriveConstants.kSlowDriveMultiplier;
         boringDriving = true;
     }
   }
