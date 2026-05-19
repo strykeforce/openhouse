@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
     deadeye = new DeadEyeSubsystem();
     ledSubsystem = new LedSubsystem();
     ledSubsystem.registerWith(telemetryService);
+    deadeye.registerWith(telemetryService);
     telemetryService.start();
 
     turret.configFactoryDefault();
@@ -92,18 +93,18 @@ public class Robot extends TimedRobot {
     double height = t[1];
     double depth = t[2];
 
-    double servoOut = clamp(0.01, 0.99, Math.atan2(height, depth) / Math.PI + 5.0 / 180.0 + 0.6);
+    double servoOut = clamp(0.01, 0.99, Math.atan2(height, depth) / Math.PI + 5.0 / 180.0 + 0.65);
 
     turret.set(TalonSRXControlMode.Velocity, output);
     if (depth > 0) {
       pointer.set(servoOut);
       if (depth < minDepth) {
         minDepth = depth;
-        System.out.println("minDepth: " + minDepth);
+        // System.out.println("minDepth: " + minDepth);
       }
       if (depth > maxDepth) {
         maxDepth = depth;
-        System.out.println("maxDepth: " + maxDepth);
+        // System.out.println("maxDepth: " + maxDepth);
       }
     }
     if (deadeye.seesTarget()) {

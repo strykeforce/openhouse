@@ -7,7 +7,6 @@ import org.ejml.simple.SimpleMatrix;
 import org.strykeforce.deadeye.Deadeye;
 import org.strykeforce.deadeye.Rect;
 import org.strykeforce.deadeye.TargetListTargetData;
-import org.strykeforce.telemetry.TelemetryService;
 import org.strykeforce.telemetry.measurable.MeasurableSubsystem;
 import org.strykeforce.telemetry.measurable.Measure;
 
@@ -182,11 +181,9 @@ public class DeadEyeSubsystem extends MeasurableSubsystem {
   public Set<Measure> getMeasures() {
     return Set.of(
         new Measure("Is deadeye enabled", () -> cam.getEnabled() ? 1 : 0),
-        new Measure("Y Pixel", () -> getTargetY()));
-  }
-
-  @Override
-  public void registerWith(TelemetryService telemetryService) {
-    super.registerWith(telemetryService);
+        new Measure("Y Pixel", () -> getTargetY()),
+        new Measure("Num Targets", () -> (double) getNumTargets()),
+        new Measure("depth", () -> getTranslationFromCamCenter()[2]),
+        new Measure("sees Target", () -> seesTarget() ? 1.0 : 0.0));
   }
 }
